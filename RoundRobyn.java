@@ -131,8 +131,7 @@ public class RoundRobyn {
             }
             cont++;
         }
-        System.out.println(" Tempo médio de espera: ");
-
+//        System.out.println(" Tempo médio de espera: ");
         resposta = resposta / numero;
         return resposta;
     }
@@ -174,7 +173,7 @@ public class RoundRobyn {
             }
             cont++;
         }
-        System.out.println(" Tempo médio de retorno: ");
+//        System.out.println(" Tempo médio de retorno: ");
         resposta = resposta / numero;
         return resposta;
     }
