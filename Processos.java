@@ -1,8 +1,7 @@
 package Vista;
 
 import Controlador.Fifo;
-//import Controlador.Prioridade;
-//import Controlador.RoundRobyn;
+import Controlador.RoundRobyn;
 import Controlador.SJF;
 import Modelo.Topico;
 import Modelo.ListaDupla;
@@ -71,6 +70,7 @@ public class Processos extends javax.swing.JFrame {
         listaAlgoritmos.add("-----Selecione-----");
         listaAlgoritmos.add("FIFO");
         listaAlgoritmos.add("SJF");
+        listaAlgoritmos.add("Round Robyn");
         for (int i = 0; i < listaAlgoritmos.size(); i++) {
             cbnListaAlgoritmos.addItem(listaAlgoritmos.get(i));
         }
@@ -116,7 +116,22 @@ public class Processos extends javax.swing.JFrame {
 
         jspGraficos.setViewportView(new Drawings(listaDupla.size(), listaDupla));
     }
-
+         void RoundR(){
+         CPU=Integer.parseInt(txtRafaga.getText());
+         tempo=Integer.parseInt(txtTiempo.getText());
+         prioridade=Integer.parseInt(txtPrioridad.getText());
+         String estado="Preparado";
+         String Datos[]= new String[5];
+         Datos[0]=txtProceso.getText();
+         Datos[1]=String.valueOf(CPU);
+         Datos[2]=String.valueOf(tempo);
+         Datos[3]=String.valueOf(prioridade);
+         Datos[4]=String.valueOf(estado);
+         m.addRow(Datos);
+         Processo p=new Processo(txtProceso.getText(), CPU, tempo, prioridade, estado);
+         listaDupla.insertarPrincipio(p);
+         jspGraficos.setViewportView(new Drawings(listaDupla.size(), listaDupla));   
+     }
     public void eleicao() {
         Topico h = new Topico(jspGraficos, listaDupla);
         h.vuelta();
@@ -368,6 +383,12 @@ public class Processos extends javax.swing.JFrame {
             a.FCSC();
             a.NoApropiativo();
             jspGraficos.setViewportView(new Threads(listaDupla.size(), listaDupla));
+        }else if(cbnListaAlgoritmos.getSelectedItem().equals("Round Robyn")){             
+                RoundRobyn r=new RoundRobyn(listaDupla);
+                r.FCSC();
+                r.RR(Integer.parseInt(txtCuantun.getText()));
+                jspGraficos.setViewportView(new Threads(listaDupla.size(), listaDupla));
+            
         }
     }//GEN-LAST:event_btnAceptarActionPerformed
 
@@ -386,6 +407,14 @@ public class Processos extends javax.swing.JFrame {
             } else {
                 SJF();
                 limpiar_cajas_texto();
+            }
+        }else if(cbnListaAlgoritmos.getSelectedItem().equals("Round Robyn")){
+            if((txtProceso.getText().equals(""))||(txtRafaga.getText().equals(""))||(txtTiempo.getText().equals(""))||(txtPrioridad.getText().equals(""))){
+                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios");
+            }else{
+                RoundR();
+                limpiar_cajas_texto();
+                numeroProcessos++;
             }
         }
     }//GEN-LAST:event_btnPrepararProcesoActionPerformed
@@ -410,6 +439,14 @@ public class Processos extends javax.swing.JFrame {
             lblTPRet.setText(String.valueOf(a.tempoRetorno()));
             lblTPResp.setText(String.valueOf(a.tempoResposta()));
         }
+        else  if(cbnListaAlgoritmos.getSelectedItem().equals("Round Robyn")){ 
+            bloqueo_botones();
+            bloqueo_cajas_texto();
+            RoundRobyn a=new RoundRobyn(listaDupla);
+            a.unionE(lblTPE,numeroProcessos);
+            a.unionRet(lblTPRet, numeroProcessos);
+            a.unionResp(lblTPResp, numeroProcessos);
+        }
     }//GEN-LAST:event_btnResultadosActionPerformed
 
     private void cbnListaAlgoritmosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbnListaAlgoritmosActionPerformed
@@ -430,6 +467,17 @@ public class Processos extends javax.swing.JFrame {
             btnPrepararProceso.setEnabled(true);
             btnAceptar.setEnabled(true);
             btnResultados.setEnabled(true);
+        }
+        else if(cbnListaAlgoritmos.getSelectedItem().equals("Round Robyn")){
+            txtProceso.setEnabled(true);
+            txtRafaga.setEnabled(true);
+            txtTiempo.setEnabled(true);
+            txtPrioridad.setEnabled(true);
+            btnPrepararProceso.setEnabled(true);
+            btnAceptar.setEnabled(true);
+            btnResultados.setEnabled(true);
+            txtCuantun.setVisible(true);
+            lblCuantun.setVisible(true);
         }
     }//GEN-LAST:event_cbnListaAlgoritmosActionPerformed
 
